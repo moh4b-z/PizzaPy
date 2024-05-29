@@ -22,150 +22,150 @@ fisicos = []
 liquidos = []
 acompanhamentos = []
 
-class Application(tk.Tk):
+class Aplicacao(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Sistema de Gerenciamento de Produtos")
         self.geometry("800x600")
         self.nome_usuario = None
-        self.create_login_screen()
+        self.criar_tela_login()
 
-    def create_login_screen(self):
-        self.login_frame = tk.Frame(self)
-        self.login_frame.pack(pady=20)
+    def criar_tela_login(self):
+        self.quadro_login = tk.Frame(self)
+        self.quadro_login.pack(pady=20)
 
-        tk.Label(self.login_frame, text="E-mail").pack()
-        self.email_entry = tk.Entry(self.login_frame)
-        self.email_entry.pack()
+        tk.Label(self.quadro_login, text="E-mail").pack()
+        self.entrada_email = tk.Entry(self.quadro_login)
+        self.entrada_email.pack()
 
-        tk.Label(self.login_frame, text="Nome").pack()
-        self.nome_entry = tk.Entry(self.login_frame)
-        self.nome_entry.pack()
+        tk.Label(self.quadro_login, text="Nome").pack()
+        self.entrada_nome = tk.Entry(self.quadro_login)
+        self.entrada_nome.pack()
 
-        tk.Label(self.login_frame, text="Senha").pack()
-        self.senha_entry = tk.Entry(self.login_frame, show="*")
-        self.senha_entry.pack()
+        tk.Label(self.quadro_login, text="Senha").pack()
+        self.entrada_senha = tk.Entry(self.quadro_login, show="*")
+        self.entrada_senha.pack()
 
-        tk.Label(self.login_frame, text="Confirme a Senha").pack()
-        self.conf_senha_entry = tk.Entry(self.login_frame, show="*")
-        self.conf_senha_entry.pack()
+        tk.Label(self.quadro_login, text="Confirme a Senha").pack()
+        self.entrada_conf_senha = tk.Entry(self.quadro_login, show="*")
+        self.entrada_conf_senha.pack()
 
-        tk.Button(self.login_frame, text="Login", command=self.verificar_credenciais).pack(pady=10)
+        tk.Button(self.quadro_login, text="Login", command=self.verificar_credenciais).pack(pady=10)
 
     def verificar_credenciais(self):
-        email = self.email_entry.get()
-        nome = self.nome_entry.get()
-        senha = self.senha_entry.get()
-        confirmar_senha = self.conf_senha_entry.get()
+        email = self.entrada_email.get()
+        nome = self.entrada_nome.get()
+        senha = self.entrada_senha.get()
+        confirmar_senha = self.entrada_conf_senha.get()
 
         if senha == "PizzaBoa" and senha == confirmar_senha:
             self.nome_usuario = nome
             messagebox.showinfo("Login bem-sucedido", f"Bem-vindo, {nome}!")
-            self.login_frame.destroy()
-            self.create_main_menu()
+            self.quadro_login.destroy()
+            self.criar_menu_principal()
         else:
             messagebox.showerror("Erro de Login", "Senha incorreta. Tente novamente.")
 
-    def create_main_menu(self):
-        self.clear_frame()
+    def criar_menu_principal(self):
+        self.limpar_quadro()
 
-        self.menu_frame = tk.Frame(self)
-        self.menu_frame.pack(pady=20)
+        self.quadro_menu = tk.Frame(self)
+        self.quadro_menu.pack(pady=20)
 
-        tk.Label(self.menu_frame, text=f"{self.nome_usuario} - Menu Principal", font=("Helvetica", 16)).pack(pady=10)
+        tk.Label(self.quadro_menu, text=f"{self.nome_usuario} - Menu Principal", font=("Helvetica", 16)).pack(pady=10)
 
-        search_and_return_frame = tk.Frame(self.menu_frame)
-        search_and_return_frame.pack(fill=tk.X)
+        quadro_pesquisa_e_retorno = tk.Frame(self.quadro_menu)
+        quadro_pesquisa_e_retorno.pack(fill=tk.X)
 
-        self.create_return_button(search_and_return_frame, self.create_main_menu)
-        self.create_search_bar(search_and_return_frame)
+        self.criar_botao_retorno(quadro_pesquisa_e_retorno, self.criar_menu_principal)
+        self.criar_barra_pesquisa(quadro_pesquisa_e_retorno)
 
-        left_frame = tk.Frame(self.menu_frame)
-        left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10)
+        quadro_esquerdo = tk.Frame(self.quadro_menu)
+        quadro_esquerdo.pack(side=tk.LEFT, fill=tk.Y, padx=10)
 
-        right_frame = tk.Frame(self.menu_frame)
-        right_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10)
+        quadro_direito = tk.Frame(self.quadro_menu)
+        quadro_direito.pack(side=tk.LEFT, fill=tk.Y, padx=10)
 
-        tk.Button(right_frame, text="+Criar", command=self.show_criar_menu).pack(pady=5)
-        tk.Button(right_frame, text="Estoque", command=self.mostrar_produtos).pack(pady=5)
-        tk.Button(right_frame, text="Menu", command=self.mostrar_produtos).pack(pady=5)
-        tk.Button(right_frame, text="Editar", command=self.editar_produtos).pack(pady=5)
+        tk.Button(quadro_direito, text="+Criar", command=self.mostrar_menu_criar).pack(pady=5)
+        tk.Button(quadro_direito, text="Estoque", command=self.mostrar_produtos).pack(pady=5)
+        tk.Button(quadro_direito, text="Menu", command=self.mostrar_produtos).pack(pady=5)
+        tk.Button(quadro_direito, text="Editar", command=self.editar_produtos).pack(pady=5)
 
-        self.create_product_display(left_frame, "Pizzas", fisicos)
-        self.create_product_display(left_frame, "Bebidas", liquidos)
-        self.create_product_display(left_frame, "Acompanhamentos", acompanhamentos)
+        self.criar_exibicao_produtos(quadro_esquerdo, "Pizzas", fisicos)
+        self.criar_exibicao_produtos(quadro_esquerdo, "Bebidas", liquidos)
+        self.criar_exibicao_produtos(quadro_esquerdo, "Acompanhamentos", acompanhamentos)
 
-    def clear_frame(self):
+    def limpar_quadro(self):
         for widget in self.winfo_children():
             widget.pack_forget()
 
-    def create_product_display(self, parent, title, products):
-        frame = tk.Frame(parent)
-        frame.pack(pady=10, fill='x')
-        tk.Label(frame, text=title, font=("Helvetica", 14)).pack(anchor='w')
-        display_frame = tk.Frame(frame)
-        display_frame.pack()
-        for product in products[-3:]:
-            self.display_product(display_frame, product)
+    def criar_exibicao_produtos(self, parent, titulo, produtos):
+        quadro = tk.Frame(parent)
+        quadro.pack(pady=10, fill='x')
+        tk.Label(quadro, text=titulo, font=("Helvetica", 14)).pack(anchor='w')
+        quadro_exibicao = tk.Frame(quadro)
+        quadro_exibicao.pack()
+        for produto in produtos[-3:]:
+            self.exibir_produto(quadro_exibicao, produto)
 
-    def display_product(self, parent, product):
-        product_frame = tk.Frame(parent, width=50, height=50, relief=tk.RAISED, borderwidth=1)
-        product_frame.pack_propagate(False)
-        product_frame.pack(side=tk.LEFT, padx=5)
+    def exibir_produto(self, parent, produto):
+        quadro_produto = tk.Frame(parent, width=50, height=50, relief=tk.RAISED, borderwidth=1)
+        quadro_produto.pack_propagate(False)
+        quadro_produto.pack(side=tk.LEFT, padx=5)
 
-        img_label = tk.Label(product_frame, text=product.imagem, width=30, height=30)
-        img_label.pack()
-        name_label = tk.Label(product_frame, text=product.nome, wraplength=50)
-        name_label.pack()
-        product_frame.bind("<Button-1>", lambda e: self.editar_produto(product))
+        rotulo_imagem = tk.Label(quadro_produto, text=produto.imagem, width=30, height=30)
+        rotulo_imagem.pack()
+        rotulo_nome = tk.Label(quadro_produto, text=produto.nome, wraplength=50)
+        rotulo_nome.pack()
+        quadro_produto.bind("<Button-1>", lambda e: self.editar_produto(produto))
 
-    def create_search_bar(self, parent):
-        search_frame = tk.Frame(parent)
-        search_frame.pack(side=tk.RIGHT)
-        tk.Label(search_frame, text="Pesquisar: ").pack(side=tk.LEFT)
-        self.search_var = tk.StringVar()
-        self.search_entry = tk.Entry(search_frame, textvariable=self.search_var)
-        self.search_entry.pack(side=tk.LEFT)
-        self.search_var.trace("w", self.update_search_suggestions)
-        self.suggestion_listbox = tk.Listbox(search_frame)
-        self.suggestion_listbox.pack(side=tk.LEFT)
-        self.suggestion_listbox.bind("<<ListboxSelect>>", self.on_suggestion_select)
+    def criar_barra_pesquisa(self, parent):
+        quadro_pesquisa = tk.Frame(parent)
+        quadro_pesquisa.pack(side=tk.RIGHT)
+        tk.Label(quadro_pesquisa, text="Pesquisar: ").pack(side=tk.LEFT)
+        self.var_pesquisa = tk.StringVar()
+        self.entrada_pesquisa = tk.Entry(quadro_pesquisa, textvariable=self.var_pesquisa)
+        self.entrada_pesquisa.pack(side=tk.LEFT)
+        self.var_pesquisa.trace("w", self.atualizar_sugestoes_pesquisa)
+        self.lista_sugestoes = tk.Listbox(quadro_pesquisa)
+        self.lista_sugestoes.pack(side=tk.LEFT)
+        self.lista_sugestoes.bind("<<ListboxSelect>>", self.selecionar_sugestao)
 
-    def update_search_suggestions(self, *args):
-        search_term = self.search_var.get().lower()
-        self.suggestion_listbox.delete(0, tk.END)
-        suggestions = [prod.nome for prod in fisicos + liquidos + acompanhamentos if search_term in prod.nome.lower()]
-        for suggestion in suggestions:
-            self.suggestion_listbox.insert(tk.END, suggestion)
+    def atualizar_sugestoes_pesquisa(self, *args):
+        termo_pesquisa = self.var_pesquisa.get().lower()
+        self.lista_sugestoes.delete(0, tk.END)
+        sugestoes = [prod.nome for prod in fisicos + liquidos + acompanhamentos if termo_pesquisa in prod.nome.lower()]
+        for sugestao in sugestoes:
+            self.lista_sugestoes.insert(tk.END, sugestao)
 
-    def on_suggestion_select(self, event):
-        selected_index = self.suggestion_listbox.curselection()
-        if selected_index:
-            selected_name = self.suggestion_listbox.get(selected_index)
-            for product in fisicos + liquidos + acompanhamentos:
-                if product.nome == selected_name:
-                    self.editar_produto(product)
+    def selecionar_sugestao(self, event):
+        indice_selecionado = self.lista_sugestoes.curselection()
+        if indice_selecionado:
+            nome_selecionado = self.lista_sugestoes.get(indice_selecionado)
+            for produto in fisicos + liquidos + acompanhamentos:
+                if produto.nome == nome_selecionado:
+                    self.editar_produto(produto)
                     break
 
-    def create_return_button(self, parent, command):
-        return_button = tk.Button(parent, text="Voltar ao Menu Principal", command=self.create_main_menu)
-        return_button.pack(side=tk.LEFT, padx=5)
+    def criar_botao_retorno(self, parent, comando):
+        botao_retorno = tk.Button(parent, text="Voltar ao Menu Principal", command=self.criar_menu_principal)
+        botao_retorno.pack(side=tk.LEFT, padx=5)
 
-    def show_criar_menu(self):
-        self.clear_frame()
-        self.criar_frame = tk.Frame(self)
-        self.criar_frame.pack(pady=20)
+    def mostrar_menu_criar(self):
+        self.limpar_quadro()
+        self.quadro_criar = tk.Frame(self)
+        self.quadro_criar.pack(pady=20)
 
-        tk.Label(self.criar_frame, text="Criar", font=("Helvetica", 16)).pack(pady=10)
-        search_and_return_frame = tk.Frame(self.criar_frame)
-        search_and_return_frame.pack(fill=tk.X)
-        self.create_return_button(search_and_return_frame, self.create_main_menu)
-        self.create_search_bar(search_and_return_frame)
+        tk.Label(self.quadro_criar, text="Criar", font=("Helvetica", 16)).pack(pady=10)
+        quadro_pesquisa_e_retorno = tk.Frame(self.quadro_criar)
+        quadro_pesquisa_e_retorno.pack(fill=tk.X)
+        self.criar_botao_retorno(quadro_pesquisa_e_retorno, self.criar_menu_principal)
+        self.criar_barra_pesquisa(quadro_pesquisa_e_retorno)
         
-        tk.Button(self.criar_frame, text="Criar Físicos", command=self.criarfisicos).pack(pady=5)
-        tk.Button(self.criar_frame, text="Criar Líquidos", command=self.criarliquidos).pack(pady=5)
+        tk.Button(self.quadro_criar, text="Criar Físicos", command=self.criar_fisicos).pack(pady=5)
+        tk.Button(self.quadro_criar, text="Criar Líquidos", command=self.criar_liquidos).pack(pady=5)
     
-    def criarfisicos(self):
+    def criar_fisicos(self):
         imagem = simpledialog.askstring("Criar Físicos", "Imagem:")
         nome = simpledialog.askstring("Criar Físicos", "Nome:")
         ingredientes = simpledialog.askstring("Criar Físicos", "Ingredientes:")
@@ -178,9 +178,9 @@ class Application(tk.Tk):
         if acompanhamento.lower() == "sim":
             acompanhamentos.append(novo_fisico)
         messagebox.showinfo("Criar Físicos", "Produto Físico Criado!")
-        self.create_main_menu()
+        self.criar_menu_principal()
 
-    def criarliquidos(self):
+    def criar_liquidos(self):
         imagem = simpledialog.askstring("Criar Líquidos", "Imagem:")
         nome = simpledialog.askstring("Criar Líquidos", "Nome:")
         volume = float(simpledialog.askstring("Criar Líquidos", "Volume:"))
@@ -192,125 +192,125 @@ class Application(tk.Tk):
         if acompanhamento.lower() == "sim":
             acompanhamentos.append(novo_liquido)
         messagebox.showinfo("Criar Líquidos", "Produto Líquido Criado!")
-        self.create_main_menu()
+        self.criar_menu_principal()
 
     def mostrar_produtos(self):
-        self.clear_frame()
-        self.produtos_frame = tk.Frame(self)
-        self.produtos_frame.pack(pady=20)
+        self.limpar_quadro()
+        self.quadro_produtos = tk.Frame(self)
+        self.quadro_produtos.pack(pady=20)
 
-        tk.Label(self.produtos_frame, text="Produtos em Estoque", font=("Helvetica", 16)).pack(pady=10)
-        search_and_return_frame = tk.Frame(self.produtos_frame)
-        search_and_return_frame.pack(fill=tk.X)
-        self.create_return_button(search_and_return_frame, self.create_main_menu)
-        self.create_search_bar(search_and_return_frame)
+        tk.Label(self.quadro_produtos, text="Produtos em Estoque", font=("Helvetica", 16)).pack(pady=10)
+        quadro_pesquisa_e_retorno = tk.Frame(self.quadro_produtos)
+        quadro_pesquisa_e_retorno.pack(fill=tk.X)
+        self.criar_botao_retorno(quadro_pesquisa_e_retorno, self.criar_menu_principal)
+        self.criar_barra_pesquisa(quadro_pesquisa_e_retorno)
 
-        tk.Label(self.produtos_frame, text="Produtos Físicos:").pack()
+        tk.Label(self.quadro_produtos, text="Produtos Físicos:").pack()
         for f in fisicos:
-            tk.Label(self.produtos_frame, text=f"Nome: {f.nome}, Preço: {f.preco}").pack()
+            tk.Label(self.quadro_produtos, text=f"Nome: {f.nome}, Preço: {f.preco}").pack()
 
-        tk.Label(self.produtos_frame, text="Produtos Líquidos:").pack()
+        tk.Label(self.quadro_produtos, text="Produtos Líquidos:").pack()
         for l in liquidos:
-            tk.Label(self.produtos_frame, text=f"Nome: {l.nome}, Preço: {l.preco}").pack()
+            tk.Label(self.quadro_produtos, text=f"Nome: {l.nome}, Preço: {l.preco}").pack()
 
-        tk.Label(self.produtos_frame, text="Acompanhamentos:").pack()
+        tk.Label(self.quadro_produtos, text="Acompanhamentos:").pack()
         for a in acompanhamentos:
-            tk.Label(self.produtos_frame, text=f"Nome: {a.nome}, Preço: {a.preco}").pack()
+            tk.Label(self.quadro_produtos, text=f"Nome: {a.nome}, Preço: {a.preco}").pack()
 
     def editar_produtos(self):
-        self.clear_frame()
-        self.editar_frame = tk.Frame(self)
-        self.editar_frame.pack(pady=20)
+        self.limpar_quadro()
+        self.quadro_editar = tk.Frame(self)
+        self.quadro_editar.pack(pady=20)
         
-        tk.Label(self.editar_frame, text="Editar Produtos", font=("Helvetica", 16)).pack(pady=10)
-        search_and_return_frame = tk.Frame(self.editar_frame)
-        search_and_return_frame.pack(fill=tk.X)
-        self.create_return_button(search_and_return_frame, self.create_main_menu)
-        self.create_search_bar(search_and_return_frame)
+        tk.Label(self.quadro_editar, text="Editar Produtos", font=("Helvetica", 16)).pack(pady=10)
+        quadro_pesquisa_e_retorno = tk.Frame(self.quadro_editar)
+        quadro_pesquisa_e_retorno.pack(fill=tk.X)
+        self.criar_botao_retorno(quadro_pesquisa_e_retorno, self.criar_menu_principal)
+        self.criar_barra_pesquisa(quadro_pesquisa_e_retorno)
 
-        tk.Label(self.editar_frame, text="Produtos Físicos:").pack()
+        tk.Label(self.quadro_editar, text="Produtos Físicos:").pack()
         for f in sorted(fisicos, key=lambda x: x.nome):
-            tk.Button(self.editar_frame, text=f.nome, command=lambda f=f: self.editar_produto(f)).pack()
+            tk.Button(self.quadro_editar, text=f.nome, command=lambda f=f: self.editar_produto(f)).pack()
 
-        tk.Label(self.editar_frame, text="Produtos Líquidos:").pack()
+        tk.Label(self.quadro_editar, text="Produtos Líquidos:").pack()
         for l in sorted(liquidos, key=lambda x: x.nome):
-            tk.Button(self.editar_frame, text=l.nome, command=lambda l=l: self.editar_produto(l)).pack()
+            tk.Button(self.quadro_editar, text=l.nome, command=lambda l=l: self.editar_produto(l)).pack()
 
-        tk.Label(self.editar_frame, text="Acompanhamentos:").pack()
+        tk.Label(self.quadro_editar, text="Acompanhamentos:").pack()
         for a in sorted(acompanhamentos, key=lambda x: x.nome):
-            tk.Button(self.editar_frame, text=a.nome, command=lambda a=a: self.editar_produto(a)).pack()
+            tk.Button(self.quadro_editar, text=a.nome, command=lambda a=a: self.editar_produto(a)).pack()
 
     def editar_produto(self, produto):
-        self.clear_frame()
-        self.edit_frame = tk.Frame(self)
-        self.edit_frame.pack(pady=20)
+        self.limpar_quadro()
+        self.quadro_editar_produto = tk.Frame(self)
+        self.quadro_editar_produto.pack(pady=20)
         
-        tk.Label(self.edit_frame, text=f"Editar {produto.nome}", font=("Helvetica", 16)).pack(pady=10)
-        search_and_return_frame = tk.Frame(self.edit_frame)
-        search_and_return_frame.pack(fill=tk.X)
-        self.create_return_button(search_and_return_frame, self.editar_produtos)
-        self.create_search_bar(search_and_return_frame)
+        tk.Label(self.quadro_editar_produto, text=f"Editar {produto.nome}", font=("Helvetica", 16)).pack(pady=10)
+        quadro_pesquisa_e_retorno = tk.Frame(self.quadro_editar_produto)
+        quadro_pesquisa_e_retorno.pack(fill=tk.X)
+        self.criar_botao_retorno(quadro_pesquisa_e_retorno, self.editar_produtos)
+        self.criar_barra_pesquisa(quadro_pesquisa_e_retorno)
 
-        img_label = tk.Label(self.edit_frame, text=f"Imagem: {produto.imagem}")
-        img_label.pack()
-        self.img_entry = tk.Entry(self.edit_frame)
-        self.img_entry.insert(0, produto.imagem)
-        self.img_entry.pack()
+        rotulo_imagem = tk.Label(self.quadro_editar_produto, text=f"Imagem: {produto.imagem}")
+        rotulo_imagem.pack()
+        self.entrada_imagem = tk.Entry(self.quadro_editar_produto)
+        self.entrada_imagem.insert(0, produto.imagem)
+        self.entrada_imagem.pack()
 
-        name_label = tk.Label(self.edit_frame, text=f"Nome: {produto.nome}")
-        name_label.pack()
-        self.name_entry = tk.Entry(self.edit_frame)
-        self.name_entry.insert(0, produto.nome)
-        self.name_entry.pack()
+        rotulo_nome = tk.Label(self.quadro_editar_produto, text=f"Nome: {produto.nome}")
+        rotulo_nome.pack()
+        self.entrada_nome = tk.Entry(self.quadro_editar_produto)
+        self.entrada_nome.insert(0, produto.nome)
+        self.entrada_nome.pack()
 
         if isinstance(produto, Fisicos):
-            ing_label = tk.Label(self.edit_frame, text=f"Ingredientes: {produto.ingredientes}")
-            ing_label.pack()
-            self.ing_entry = tk.Entry(self.edit_frame)
-            self.ing_entry.insert(0, produto.ingredientes)
-            self.ing_entry.pack()
+            rotulo_ingredientes = tk.Label(self.quadro_editar_produto, text=f"Ingredientes: {produto.ingredientes}")
+            rotulo_ingredientes.pack()
+            self.entrada_ingredientes = tk.Entry(self.quadro_editar_produto)
+            self.entrada_ingredientes.insert(0, produto.ingredientes)
+            self.entrada_ingredientes.pack()
 
-            weight_label = tk.Label(self.edit_frame, text=f"Peso: {produto.peso}")
-            weight_label.pack()
-            self.weight_entry = tk.Entry(self.edit_frame)
-            self.weight_entry.insert(0, produto.peso)
-            self.weight_entry.pack()
+            rotulo_peso = tk.Label(self.quadro_editar_produto, text=f"Peso: {produto.peso}")
+            rotulo_peso.pack()
+            self.entrada_peso = tk.Entry(self.quadro_editar_produto)
+            self.entrada_peso.insert(0, produto.peso)
+            self.entrada_peso.pack()
 
         elif isinstance(produto, Liquidos):
-            volume_label = tk.Label(self.edit_frame, text=f"Volume: {produto.volume}")
-            volume_label.pack()
-            self.volume_entry = tk.Entry(self.edit_frame)
-            self.volume_entry.insert(0, produto.volume)
-            self.volume_entry.pack()
+            rotulo_volume = tk.Label(self.quadro_editar_produto, text=f"Volume: {produto.volume}")
+            rotulo_volume.pack()
+            self.entrada_volume = tk.Entry(self.quadro_editar_produto)
+            self.entrada_volume.insert(0, produto.volume)
+            self.entrada_volume.pack()
 
-        price_label = tk.Label(self.edit_frame, text=f"Preço: {produto.preco}")
-        price_label.pack()
-        self.price_entry = tk.Entry(self.edit_frame)
-        self.price_entry.insert(0, produto.preco)
-        self.price_entry.pack()
+        rotulo_preco = tk.Label(self.quadro_editar_produto, text=f"Preço: {produto.preco}")
+        rotulo_preco.pack()
+        self.entrada_preco = tk.Entry(self.quadro_editar_produto)
+        self.entrada_preco.insert(0, produto.preco)
+        self.entrada_preco.pack()
 
-        acomp_label = tk.Label(self.edit_frame, text=f"Acompanhamento: {produto.acompanhamento}")
-        acomp_label.pack()
-        self.acomp_entry = tk.Entry(self.edit_frame)
-        self.acomp_entry.insert(0, produto.acompanhamento)
-        self.acomp_entry.pack()
+        rotulo_acompanhamento = tk.Label(self.quadro_editar_produto, text=f"Acompanhamento: {produto.acompanhamento}")
+        rotulo_acompanhamento.pack()
+        self.entrada_acompanhamento = tk.Entry(self.quadro_editar_produto)
+        self.entrada_acompanhamento.insert(0, produto.acompanhamento)
+        self.entrada_acompanhamento.pack()
 
-        tk.Button(self.edit_frame, text="Salvar", command=lambda: self.salvar_edicao(produto)).pack(pady=5)
-        tk.Button(self.edit_frame, text="Excluir", command=lambda: self.excluir_produto(produto)).pack(pady=5)
+        tk.Button(self.quadro_editar_produto, text="Salvar", command=lambda: self.salvar_edicao(produto)).pack(pady=5)
+        tk.Button(self.quadro_editar_produto, text="Excluir", command=lambda: self.excluir_produto(produto)).pack(pady=5)
 
     def salvar_edicao(self, produto):
-        produto.imagem = self.img_entry.get()
-        produto.nome = self.name_entry.get()
+        produto.imagem = self.entrada_imagem.get()
+        produto.nome = self.entrada_nome.get()
 
         if isinstance(produto, Fisicos):
-            produto.ingredientes = self.ing_entry.get()
-            produto.peso = float(self.weight_entry.get())
+            produto.ingredientes = self.entrada_ingredientes.get()
+            produto.peso = float(self.entrada_peso.get())
 
         elif isinstance(produto, Liquidos):
-            produto.volume = float(self.volume_entry.get())
+            produto.volume = float(self.entrada_volume.get())
 
-        produto.preco = float(self.price_entry.get())
-        acompanhamento = self.acomp_entry.get()
+        produto.preco = float(self.entrada_preco.get())
+        acompanhamento = self.entrada_acompanhamento.get()
 
         if acompanhamento.lower() == "sim" and produto not in acompanhamentos:
             acompanhamentos.append(produto)
@@ -319,7 +319,7 @@ class Application(tk.Tk):
         produto.acompanhamento = acompanhamento
 
         messagebox.showinfo("Editar Produto", "Produto atualizado!")
-        self.create_main_menu()
+        self.criar_menu_principal()
 
     def excluir_produto(self, produto):
         if isinstance(produto, Fisicos):
@@ -329,8 +329,8 @@ class Application(tk.Tk):
         if produto in acompanhamentos:
             acompanhamentos.remove(produto)
         messagebox.showinfo("Excluir Produto", "Produto excluído!")
-        self.create_main_menu()
+        self.criar_menu_principal()
 
 if __name__ == "__main__":
-    app = Application()
+    app = Aplicacao()
     app.mainloop()
