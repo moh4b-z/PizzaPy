@@ -1,3 +1,21 @@
+#O método __init__ é um método especial em Python conhecido como o inicializador de instância. 
+# Ele é chamado automaticamente quando um novo objeto de uma classe é criado. O __init__ permite 
+# inicializar os atributos do objeto.
+
+
+#O método to_dict é um método que você pode definir em uma classe para converter os atributos de 
+# um objeto dessa classe em um dicionário. Este método é útil para serialização, ou seja, para converter 
+# um objeto em um formato que pode ser facilmente armazenado ou transmitido, como JSON.
+
+#O self é uma convenção em Python que representa a instância atual da classe. 
+# Ele é usado para acessar variáveis e métodos que pertencem à classe. Quando você define métodos 
+# em uma classe, o primeiro parâmetro desses métodos geralmente é self, que permite que você 
+# referencie os atributos e métodos da instância.
+
+#Quando você cria uma instância de uma classe, essa instância pode ter seus próprios atributos e métodos. 
+# O self é como você acessa esses atributos e métodos dentro da classe.
+import json
+
 class Fisicos:
     def __init__(self, imagem, nome, ingredientes, peso, preco, acompanhamento):
         self.imagem = imagem
@@ -7,6 +25,17 @@ class Fisicos:
         self.preco = preco
         self.acompanhamento = acompanhamento
 
+    def to_dict(self):
+        return {
+            "tipo": "fisicos",
+            "imagem": self.imagem,
+            "nome": self.nome,
+            "ingredientes": self.ingredientes,
+            "peso": self.peso,
+            "preco": self.preco,
+            "acompanhamento": self.acompanhamento
+        }
+
 class Liquidos:
     def __init__(self, imagem, nome, volume, preco, acompanhamento):
         self.imagem = imagem
@@ -15,9 +44,48 @@ class Liquidos:
         self.preco = preco
         self.acompanhamento = acompanhamento
 
+    def to_dict(self):
+        return {
+            "tipo": "liquidos",
+            "imagem": self.imagem,
+            "nome": self.nome,
+            "volume": self.volume,
+            "preco": self.preco,
+            "acompanhamento": self.acompanhamento
+        }
+
 fisicos = []
 liquidos = []
 acompanhamentos = []
+
+def salvar_produtos():
+    produtos = [p.to_dict() for p in fisicos + liquidos]
+    with open('/Users/24122313/Downloads/PizzaPy-main/produtos.txt', 'w', encoding='utf-8') as arquivo:
+        json.dump(produtos, arquivo, ensure_ascii=False)
+
+def carregar_produtos():
+    try:
+        with open('/Users/24122313/Downloads/PizzaPy-main/produtos.txt', 'r', encoding='utf-8') as arquivo:
+            conteudo = arquivo.read()
+            print("Conteúdo do arquivo:\n", conteudo)  # Debug: Verifique o conteúdo do arquivo
+            produtos = json.loads(conteudo)
+            for p in produtos:
+                if p["tipo"] == "fisicos":
+                    produto = Fisicos(p["imagem"], p["nome"], p["ingredientes"], p["peso"], p["preco"], p["acompanhamento"])
+                    fisicos.append(produto)
+                elif p["tipo"] == "liquidos":
+                    produto = Liquidos(p["imagem"], p["nome"], p["volume"], p["preco"], p["acompanhamento"])
+                    liquidos.append(produto)
+                if p["acompanhamento"].lower() == "sim":
+                    acompanhamentos.append(produto)
+    except FileNotFoundError:
+        print("Erro: Arquivo não encontrado.")
+    except json.JSONDecodeError as e:
+        print(f"Erro ao decodificar JSON: {e}")
+    except Exception as e:
+        print(f"Um erro inesperado ocorreu: {e}")
+
+# As demais funções permanecem inalteradas
 
 def criarfisicos():
     imagem = input("Imagem: ")
@@ -26,12 +94,13 @@ def criarfisicos():
     peso = float(input("Peso: "))
     preco = float(input("Preço: "))
     acompanhamento = input("Acompanhamento (Sim/Não): ")
-    
+
     novo_fisico = Fisicos(imagem, nome, ingredientes, peso, preco, acompanhamento)
     fisicos.append(novo_fisico)
     if acompanhamento.lower() == "sim":
         acompanhamentos.append(novo_fisico)
     print("Produto Físico Criado!")
+    salvar_produtos()
 
 def criarliquidos():
     imagem = input("Imagem: ")
@@ -39,12 +108,13 @@ def criarliquidos():
     volume = float(input("Volume: "))
     preco = float(input("Preço: "))
     acompanhamento = input("Acompanhamento (Sim/Não): ")
-    
+
     novo_liquido = Liquidos(imagem, nome, volume, preco, acompanhamento)
     liquidos.append(novo_liquido)
     if acompanhamento.lower() == "sim":
         acompanhamentos.append(novo_liquido)
     print("Produto Líquido Criado!")
+    salvar_produtos()
 
 def mostrar_produtos():
     print("\nProdutos Físicos:")
@@ -63,15 +133,15 @@ def editar_produtos():
     print("\nProdutos Físicos:")
     for idx, f in enumerate(sorted(fisicos, key=lambda x: x.nome)):
         print(f"{idx + 1}. {f.nome}")
-    
+
     print("\nProdutos Líquidos:")
     for idx, l in enumerate(sorted(liquidos, key=lambda x: x.nome)):
         print(f"{idx + 1}. {l.nome}")
-    
+
     print("\nAcompanhamentos:")
     for idx, a in enumerate(sorted(acompanhamentos, key=lambda x: x.nome)):
         print(f"{idx + 1}. {a.nome}")
-    
+
     tipo = input("\nEscolha o tipo de produto para editar (Fisicos/Liquidos/Acompanhamentos): ").lower()
     if tipo == "fisicos":
         produtos = sorted(fisicos, key=lambda x: x.nome)
@@ -95,10 +165,10 @@ def editar_produtos():
     produto.nome = input(f"Nome ({produto.nome}): ") or produto.nome
     if tipo == "fisicos":
         produto.ingredientes = input(f"Ingredientes ({produto.ingredientes}): ") or produto.ingredientes
-        produto.peso = input(f"Peso ({produto.peso}): ") or produto.peso
+        produto.peso = float(input(f"Peso ({produto.peso}): ") or produto.peso)
     else:
-        produto.volume = input(f"Volume ({produto.volume}): ") or produto.volume
-    produto.preco = input(f"Preço ({produto.preco}): ") or produto.preco
+        produto.volume = float(input(f"Volume ({produto.volume}): ") or produto.volume)
+    produto.preco = float(input(f"Preço ({produto.preco}): ") or produto.preco)
     acompanhamento = input(f"Acompanhamento ({produto.acompanhamento}): ") or produto.acompanhamento
     if acompanhamento.lower() == "sim" and produto not in acompanhamentos:
         acompanhamentos.append(produto)
@@ -107,6 +177,7 @@ def editar_produtos():
     produto.acompanhamento = acompanhamento
 
     print("Produto atualizado!")
+    salvar_produtos()
 
 def BotaoExcluir():
     tipo = input("Escolha o tipo de produto para excluir (Fisicos/Liquidos/Acompanhamentos): ").lower()
@@ -132,6 +203,7 @@ def BotaoExcluir():
         if produto in acompanhamentos:
             acompanhamentos.remove(produto)
         print(f"{produto.nome} removido!")
+        salvar_produtos()
     else:
         print(f"{produto.nome} não removido.")
 
@@ -178,5 +250,6 @@ def menu_principal(nome):
             print("Opção inválida.")
 
 if __name__ == "__main__":
+    carregar_produtos()
     nome_usuario = verificar_credenciais()
     menu_principal(nome_usuario)
