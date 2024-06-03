@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog, ttk
+from tkinter import messagebox, simpledialog
+import json
 
 class Fisicos:
     def __init__(self, imagem, nome, ingredientes, peso, preco, acompanhamento):
@@ -10,6 +11,17 @@ class Fisicos:
         self.preco = preco
         self.acompanhamento = acompanhamento
 
+    def to_dict(self):
+        return {
+            "tipo": "fisicos",
+            "imagem": self.imagem,
+            "nome": self.nome,
+            "ingredientes": self.ingredientes,
+            "peso": self.peso,
+            "preco": self.preco,
+            "acompanhamento": self.acompanhamento
+        }
+
 class Liquidos:
     def __init__(self, imagem, nome, volume, preco, acompanhamento):
         self.imagem = imagem
@@ -18,9 +30,44 @@ class Liquidos:
         self.preco = preco
         self.acompanhamento = acompanhamento
 
+    def to_dict(self):
+        return {
+            "tipo": "liquidos",
+            "imagem": self.imagem,
+            "nome": self.nome,
+            "volume": self.volume,
+            "preco": self.preco,
+            "acompanhamento": self.acompanhamento
+        }
+
 fisicos = []
 liquidos = []
 acompanhamentos = []
+
+def salvar_produtos():
+    produtos = [p.to_dict() for p in fisicos + liquidos]
+    with open('produtos.txt', 'w', encoding='utf-8') as arquivo:
+        json.dump(produtos, arquivo, ensure_ascii=False)
+
+def carregar_produtos():
+    try:
+        with open('produtos.txt', 'r', encoding='utf-8') as arquivo:
+            produtos = json.load(arquivo)
+            for p in produtos:
+                if p["tipo"] == "fisicos":
+                    produto = Fisicos(p["imagem"], p["nome"], p["ingredientes"], p["peso"], p["preco"], p["acompanhamento"])
+                    fisicos.append(produto)
+                elif p["tipo"] == "liquidos":
+                    produto = Liquidos(p["imagem"], p["nome"], p["volume"], p["preco"], p["acompanhamento"])
+                    liquidos.append(produto)
+                if p["acompanhamento"].lower() == "sim":
+                    acompanhamentos.append(produto)
+    except FileNotFoundError:
+        print("Erro: Arquivo não encontrado.")
+    except json.JSONDecodeError as e:
+        print(f"Erro ao decodificar JSON: {e}")
+    except Exception as e:
+        print(f"Um erro inesperado ocorreu: {e}")
 
 class Aplicacao(tk.Tk):
     def __init__(self):
@@ -28,6 +75,7 @@ class Aplicacao(tk.Tk):
         self.title("Sistema de Gerenciamento de Produtos")
         self.geometry("800x600")
         self.nome_usuario = None
+        carregar_produtos()
         self.criar_tela_login()
 
     def criar_tela_login(self):
