@@ -15,7 +15,8 @@ class App(ctk.CTk):
         self.resizable(False, False)
 
     def tela_de_login(self):
-        # Tentando carregar a imagem usando caminho absoluto
+        
+        
         image_path = os.path.abspath("foto_login.png")
         if os.path.isfile(image_path):
             try:
@@ -42,33 +43,34 @@ class App(ctk.CTk):
         self.lb_title = ctk.CTkLabel(self.frame_login, text="Faça o seu Login", font=("Century Gothic bold", 22))
         self.lb_title.grid(row=0, column=0, padx=10, pady=10)
 
-        self.username_login_entry = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Seu nome de usuário...", font=("Century Gothic bold", 16), corner_radius=15, border_color="green")
-        self.username_login_entry.grid(row=1, column=0, pady=10, padx=10)
+        self.entrada_nome = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Seu nome de usuário...", font=("Century Gothic bold", 16), corner_radius=15, border_color="green")
+        self.entrada_nome.grid(row=1, column=0, pady=10, padx=10)
 
-        self.senha_login_entry = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Sua senha...", font=("Century Gothic bold", 16), show="*", corner_radius=15, border_color="green")
-        self.senha_login_entry.grid(row=2, column=0, pady=10, padx=10)
+        self.entrada_senha = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Sua senha...", font=("Century Gothic bold", 16), show="*", corner_radius=15, border_color="green")
+        self.entrada_senha.grid(row=2, column=0, pady=10, padx=10)
 
-        self.confirma_login_entry = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Confirme sua senha...", font=("Century Gothic bold", 16), show="*", corner_radius=15, border_color="green")
-        self.confirma_login_entry.grid(row=3, column=0, pady=10, padx=10)
+        self.entrada_conf_senha = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Confirme sua senha...", font=("Century Gothic bold", 16), show="*", corner_radius=15, border_color="green")
+        self.entrada_conf_senha.grid(row=3, column=0, pady=10, padx=10)
 
         self.ver_senha_var = ctk.IntVar()
         self.ver_senha = ctk.CTkCheckBox(self.frame_login, text="Clique para ver a senha...", font=("Century Gothic bold", 14), variable=self.ver_senha_var, command=self.toggle_senha)
         self.ver_senha.grid(row=4, column=0, pady=10, padx=10)
 
-        self.btn_login = ctk.CTkButton(self.frame_login, width=300, text="Fazer Login", font=("Century Gothic bold", 16), corner_radius=15, fg_color="green", command=self.fazer_login)
+        self.btn_login = ctk.CTkButton(self.frame_login, width=300, text="Fazer Login", font=("Century Gothic bold", 16), corner_radius=15, fg_color="green", command=self.verificar_credenciais)
         self.btn_login.grid(row=5, column=0, pady=10, padx=10)
 
-    def toggle_senha(self):
-        if self.ver_senha_var.get():
-            self.senha_login_entry.configure(show="")
-            self.confirma_login_entry.configure(show="")
-        else:
-            self.senha_login_entry.configure(show="*")
-            self.confirma_login_entry.configure(show="*")
 
-    def fazer_login(self):
-        # Função de login (a ser implementada)
-        pass
+
+    def criar_menu_principal(self):
+        self.limpar_quadro()
+
+        self.quadro_menu = tk.Frame(self)
+        self.quadro_menu.pack(pady=20)
+
+        
+    def limpar_quadro(self):
+        for widget in self.winfo_children():
+            widget.pack_forget()
 
 if __name__ == "__main__":
     app = App()

@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import messagebox, simpledialog, PhotoImage
 from tkinter import Tk, Toplevel
 from tkinter import filedialog
-from PIL import Image, ImageTk
 import os
 import json
 
@@ -74,62 +73,41 @@ def carregar_produtos():
     except Exception as e:
         print(f"Um erro inesperado ocorreu: {e}")
 
-class Aplicacao(tk.Tk):
+class Aplicacao(ctk.CustomTk):
     def __init__(self):
         super().__init__()
+        self.set_background_color("darkgrey")  # Definindo cor de fundo
+        self.set_button_color("blue")  # Definindo cor dos botões
         self.title("Sistema de Gerenciamento de Produtos")
         self.geometry("800x600")
         self.nome_usuario = None
         carregar_produtos()
         self.criar_tela_login()
 
-    def tela_de_login(self):
-        # Tentando carregar a imagem usando caminho absoluto
-        image_path = os.path.abspath("foto_login.png")
-        if os.path.isfile(image_path):
-            try:
-                self.img = PhotoImage(file=image_path)
-                self.lb_img = ctk.CTkLabel(self, text="", image=self.img)
-            except Exception as e:
-                messagebox.showerror("Erro", f"Erro ao carregar a imagem: {e}")
-                self.lb_img = ctk.CTkLabel(self, text="Imagem não encontrada", font=("Century Gothic bold", 14))
-        else:
-            messagebox.showerror("Erro", f"Arquivo {image_path} não encontrado.")
-            self.lb_img = ctk.CTkLabel(self, text="Imagem não encontrada", font=("Century Gothic bold", 14))
+    def criar_tela_login(self):
+        self.quadro_login = ctk.CustomFrame(self)
+        self.quadro_login.pack(pady=20)
 
-        self.lb_img.grid(row=1, column=0, padx=10)
+        ctk.CustomLabel(self.quadro_login, text="E-mail").pack()
+        self.entrada_email = ctk.CustomEntry(self.quadro_login)
+        self.entrada_email.pack()
 
-        # Título da nossa plataforma
-        self.title_label = ctk.CTkLabel(self, text="Faça o seu login", font=("Century Gothic bold", 14))
-        self.title_label.grid(row=0, column=0, pady=10, padx=10)
+        ctk.CustomLabel(self.quadro_login, text="Nome").pack()
+        self.entrada_nome = ctk.CustomEntry(self.quadro_login)
+        self.entrada_nome.pack()
 
-        # Criando o frame do formulário do login
-        self.frame_login = ctk.CTkFrame(self, width=350, height=380)
-        self.frame_login.place(x=350, y=10)
+        ctk.CustomLabel(self.quadro_login, text="Senha").pack()
+        self.entrada_senha = ctk.CustomEntry(self.quadro_login, show="*")
+        self.entrada_senha.pack()
 
-        # Colocando widgets dentro do frame - formulário de login
-        self.lb_title = ctk.CTkLabel(self.frame_login, text="Faça o seu Login", font=("Century Gothic bold", 22))
-        self.lb_title.grid(row=0, column=0, padx=10, pady=10)
+        ctk.CustomLabel(self.quadro_login, text="Confirme a Senha").pack()
+        self.entrada_conf_senha = ctk.CustomEntry(self.quadro_login, show="*")
+        self.entrada_conf_senha.pack()
 
-        self.entrada_nome = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Seu nome de usuário...", font=("Century Gothic bold", 16), corner_radius=15, border_color="green")
-        self.entrada_nome.grid(row=1, column=0, pady=10, padx=10)
-
-        self.entrada_senha = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Sua senha...", font=("Century Gothic bold", 16), show="*", corner_radius=15, border_color="green")
-        self.entrada_senha.grid(row=2, column=0, pady=10, padx=10)
-
-        self.entrada_conf_senha = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Confirme sua senha...", font=("Century Gothic bold", 16), show="*", corner_radius=15, border_color="green")
-        self.entrada_conf_senha.grid(row=3, column=0, pady=10, padx=10)
-
-        self.ver_senha_var = ctk.IntVar()
-        self.ver_senha = ctk.CTkCheckBox(self.frame_login, text="Clique para ver a senha...", font=("Century Gothic bold", 14), variable=self.ver_senha_var, command=self.toggle_senha)
-        self.ver_senha.grid(row=4, column=0, pady=10, padx=10)
-
-        self.btn_login = ctk.CTkButton(self.frame_login, width=300, text="Fazer Login", font=("Century Gothic bold", 16), corner_radius=15, fg_color="green", command=self.verificar_credenciais)
-        self.btn_login.grid(row=5, column=0, pady=10, padx=10)
-
-
+        ctk.CustomButton(self.quadro_login, text="Login", command=self.verificar_credenciais).pack(pady=10)
 
     def verificar_credenciais(self):
+        email = self.entrada_email.get()
         nome = self.entrada_nome.get()
         senha = self.entrada_senha.get()
         confirmar_senha = self.entrada_conf_senha.get()
@@ -141,6 +119,9 @@ class Aplicacao(tk.Tk):
             self.criar_menu_principal()
         else:
             messagebox.showerror("Erro de Login", "Senha incorreta. Tente novamente.")
+
+    # O restante do código permanece o mesmo...
+
 
     def criar_menu_principal(self):
         self.limpar_quadro()
